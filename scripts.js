@@ -110,7 +110,11 @@ document.addEventListener("keypress", checkForKey)
 
 function checkForKey(e) {
     buttons.forEach((button) => {
-        if (e.key == button.textContent) {
+        key = e.key;
+        if (key == "c") {
+            key = key.toUpperCase();
+        }
+        if (key == button.textContent) {
             button.click();
         }
     });
