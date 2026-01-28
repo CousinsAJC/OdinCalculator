@@ -8,70 +8,30 @@ screen.textContent = "0";
 const buttons = document.querySelectorAll(".button");
 
 const handleClick = (event) => {
-    console.log(event.target.textContent);
+    let keyPressed = event.target.textContent;
 
-    //If press Enter Button
-    if (event.target.textContent == "Enter") {
-        if (operator == null || input == null) {
-            //do nothing
-        } else {
-            if (firstNum != null && input != null && operator != null) {
-                firstNum = operate(Number(firstNum), operator, Number(input));
-                input = null;
-                operator = null;
-                screen.textContent = firstNum;
-            } else {
-                screen.textContent = "There seems to be an error.";
-                input = null;
-                firstNum = null;
-                operator = null;
-            }
-        }
+    console.log(keyPressed);
 
-    //If press Clear button
-    } else if (event.target.textContent == "C") {
-        input = null;
-        firstNum = null;
-        operator = null;
-        screen.textContent = "0";
-    
-    //If press a number
-    } else if (!isNaN(event.target.textContent)){
-        //if starting from clear
-        if (input == null || input == 0) {
-            input = event.target.textContent
-            screen.textContent = input
-        //if extending a number (ie 1 becomes 12)    
-        } else {
-            input = input + event.target.textContent;
-            screen.textContent = input;
-        }
+    if (keyPressed == "Enter") {
+        enterPressed();
 
-    //If input is an operator
-    } else if (isNaN(event.target.textContent)) {
-        //If first number is empty
-        if(firstNum == null) {
-            operator = event.target.textContent;
-            firstNum = input;
-            input = null;
-            screen.textContent = firstNum + operator;
-        } else if (firstNum != null) {
-            if (input == null) {
-                operator = event.target.textContent;
-            } else {
-                firstNum = operate(Number(firstNum), operator, Number(input));
-                operator = event.target.textContent;
-                input = null;
-                screen.textContent = firstNum + " " + operator;
-            }
+    } else if (keyPressed == "C") {
+        clearPressed()
+
+    } else if (!isNaN(keyPressed)){
+        numberPressed(keyPressed);
+
+    } else if (isNaN(keyPressed)) {
+        if (keyPressed == "."){
+            decimalPressed(keyPressed);
             
+        } else {
+            operatorPressed(keyPressed);
         }
     }
 }
 
-buttons.forEach((button) => {
-    button.addEventListener('click', handleClick);
-})
+
 
 
 
@@ -127,6 +87,11 @@ function operate(num1, operator, num2){
 document.addEventListener("keypress", checkForKey)
 
 
+buttons.forEach((button) => {
+    button.addEventListener('click', handleClick);
+})
+
+
 function checkForKey(e) {
     buttons.forEach((button) => {
         key = e.key;
@@ -137,6 +102,82 @@ function checkForKey(e) {
             button.click();
         }
     });
+}
+
+function enterPressed() {
+    if (operator == null || input == null) {
+        //do nothing
+    } else {
+        if (firstNum != null && input != null && operator != null) {
+            firstNum = operate(Number(firstNum), operator, Number(input));
+            input = null;
+            operator = null;
+            printToScreen(firstNum);
+        } else {
+            screen.textContent = "There seems to be an error.";
+            input = null;
+            firstNum = null;
+            operator = null;
+        }
+    }
+}
+
+function clearPressed() {
+    input = null;
+    firstNum = null;
+    operator = null;
+    screen.textContent = "0";
+}
+
+function numberPressed(keyPressed) {
+    //if starting from clear
+        if (input == null || input == 0) {
+            input = keyPressed
+            screen.textContent = input
+        //if extending a number (ie 1 becomes 12)    
+        } else {
+            input = input + keyPressed;
+            screen.textContent = input;
+        }
+}
+
+function decimalPressed(keyPressed) {
+    if (input == 0 || input == null) {
+        if (input.includes(".")) {
+            //do nothing
+        } else {
+            input = ".";
+        }
+    } else {
+        if (input.includes(".")) {
+            //do nothing
+        } else {
+            input = input + keyPressed;
+        }
+    }
+}
+
+function operatorPressed(keyPressed) {
+    if(firstNum == null) {
+        operator = keyPressed;
+        firstNum = input;
+        input = null;
+        screen.textContent = firstNum + operator;
+    } else if (firstNum != null) {
+        if (input == null) {
+            operator = keyPressed;
+        } else {
+            firstNum = operate(Number(firstNum), operator, Number(input));
+            operator = keyPressed;
+            input = null;
+            printToScreen(firstNum + " " + operator);
+        }
+        
+    }
+}
+
+function printToScreen(a) {
+    screen.textContent = a;
 }
 
 
