@@ -3,9 +3,36 @@ let operator = null;
 let input = null;
 
 let screen = document.querySelector(".screen");
+const buttons = document.querySelectorAll(".button");
+
 printToScreen("0");
 
-const buttons = document.querySelectorAll(".button");
+function clearVariables() {
+    let firstNum = null;
+    let operator = null;
+    let input = null;
+}
+
+function countDigits(num) {
+    const numString = String(Math.abs(num));
+    return numString.length;
+}
+
+document.addEventListener("keypress", checkForKey)
+
+function checkForKey(e) {
+    buttons.forEach((button) => {
+        key = e.key;
+        if (key == "c") {
+            key = key.toUpperCase();
+        }
+        if (key == button.textContent) {
+            button.click();
+        }
+    });
+}
+
+
 
 const handleClick = (event) => {
     let keyPressed = event.target.textContent;
@@ -27,6 +54,28 @@ const handleClick = (event) => {
             
         } else {
             operatorPressed(keyPressed);
+        }
+    }
+}
+
+buttons.forEach((button) => {
+    button.addEventListener('click', handleClick);
+})
+
+function enterPressed() {
+    if (operator == null || input == null) {
+        //do nothing
+    } else {
+        if (firstNum != null && input != null && operator != null) {
+            firstNum = operate(Number(firstNum), operator, Number(input));
+            input = null;
+            operator = null;
+            printToScreen(firstNum);
+            firstNum = null;
+        } else {
+            clearVariables();
+            printToScreen("There seems to be an error.");
+            clearVariables;
         }
     }
 }
@@ -83,49 +132,8 @@ function operate(num1, operator, num2){
 }
 
 
-
-document.addEventListener("keypress", checkForKey)
-
-
-buttons.forEach((button) => {
-    button.addEventListener('click', handleClick);
-})
-
-
-function checkForKey(e) {
-    buttons.forEach((button) => {
-        key = e.key;
-        if (key == "c") {
-            key = key.toUpperCase();
-        }
-        if (key == button.textContent) {
-            button.click();
-        }
-    });
-}
-
-function enterPressed() {
-    if (operator == null || input == null) {
-        //do nothing
-    } else {
-        if (firstNum != null && input != null && operator != null) {
-            firstNum = operate(Number(firstNum), operator, Number(input));
-            input = null;
-            operator = null;
-            printToScreen(firstNum);
-        } else {
-            screen.textContent = "There seems to be an error.";
-            input = null;
-            firstNum = null;
-            operator = null;
-        }
-    }
-}
-
 function clearPressed() {
-    input = null;
-    firstNum = null;
-    operator = null;
+    clearVariables();
     printToScreen("0");
 }
 
@@ -158,6 +166,10 @@ function decimalPressed(keyPressed) {
 }
 
 function operatorPressed(keyPressed) {
+    if (input == null || firstNum == null){
+        printToScreen("There seems to be an error.");
+        clearVariables();
+    }
     if(firstNum == null) {
         operator = keyPressed;
         firstNum = input;
@@ -180,9 +192,19 @@ function printToScreen(a) {
     if (a == "I don't think so!" || a == "There seems to be an error.") {
         screen.style = "font-size:16px;"
         screen.textContent = a;
+        clearVariables();
     } else {
-        screen.style = "font-size:24px;"
-        screen.textContent = a;
+        const length = countDigits(a);
+        if (length > 8) {
+            const newA = a.toFixed(8);
+            screen.style = "font-size:24px;";
+            screen.textContent = newA;
+        }
+        else{
+            screen.style = "font-size:24px;";
+            screen.textContent = a;
+        }
+
     }
     
 }
