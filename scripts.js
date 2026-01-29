@@ -3,7 +3,7 @@ let operator = null;
 let input = null;
 
 let screen = document.querySelector(".screen");
-screen.textContent = "0";
+printToScreen("0");
 
 const buttons = document.querySelectorAll(".button");
 
@@ -126,18 +126,18 @@ function clearPressed() {
     input = null;
     firstNum = null;
     operator = null;
-    screen.textContent = "0";
+    printToScreen("0");
 }
 
 function numberPressed(keyPressed) {
     //if starting from clear
         if (input == null || input == 0) {
             input = keyPressed
-            screen.textContent = input
+            printToScreen(input);
         //if extending a number (ie 1 becomes 12)    
         } else {
             input = input + keyPressed;
-            screen.textContent = input;
+            printToScreen(input);
         }
 }
 
@@ -162,7 +162,7 @@ function operatorPressed(keyPressed) {
         operator = keyPressed;
         firstNum = input;
         input = null;
-        screen.textContent = firstNum + operator;
+        printToScreen(firstNum + operator);
     } else if (firstNum != null) {
         if (input == null) {
             operator = keyPressed;
@@ -177,7 +177,14 @@ function operatorPressed(keyPressed) {
 }
 
 function printToScreen(a) {
-    screen.textContent = a;
+    if (a == "I don't think so!" || a == "There seems to be an error.") {
+        screen.style = "font-size:16px;"
+        screen.textContent = a;
+    } else {
+        screen.style = "font-size:24px;"
+        screen.textContent = a;
+    }
+    
 }
 
 
